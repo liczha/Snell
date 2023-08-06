@@ -16,13 +16,17 @@ apt-get install wget #Ubuntu/Debian
 Debian & Ubuntu 用户依次执行命令（AMD）：
 
 wget --no-check-certificate -O snell.sh https://raw.githubusercontent.com/liczha/Snell/main/AMD/snell.sh
+
 chmod +x snell.sh
+
 ./snell.sh
 
 Debian & Ubuntu 用户依次执行命令（ARM）：
 
 wget --no-check-certificate -O snell.sh https://raw.githubusercontent.com/liczha/Snell/main/ARM/snell.sh
+
 chmod +x snell.sh
+
 ./snell.sh
 
 2）修改Snell服务器运行端口
