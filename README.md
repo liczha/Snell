@@ -75,7 +75,7 @@ apt-get install wget #Ubuntu/Debian
 
 cd /usr/src && wget -N --no-check-certificate "https://raw.githubusercontent.com/liczha/Snell/main/BBR/tcp.sh" && chmod +x tcp.sh && ./tcp.sh
 
-选择“2”，“安装 BBRplus版内核”加速。在安装过程中，可能会出现如下提示，用右方向键选“”，然后回车。 安装完成后会提示重启服务器，这时候输入字母“y”，回车后，重启服务器。当服务器启动后，我们再次执行安装命令，选择“7”启用“使用BBRplus版加速”。
+选择“2”，“安装 BBRplus版内核”加速。在安装过程中，可能会出现如下提示，用右方向键选“NO”，然后回车。 安装完成后会提示重启服务器，这时候输入字母“y”，回车后，重启服务器。当服务器启动后，我们再次执行安装命令，选择“7”启用“使用BBRplus版加速”。
 
 Snell客户端Surge配置 Proxy = snell, [SERVER ADDRESS], [GENERATED PORT], psk=[GENERATED PSK], obfs=tls
 
