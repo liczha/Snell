@@ -14,7 +14,7 @@ apt-get install wget #Ubuntu/Debian
 
 Debian & Ubuntu 用户依次执行命令（AMD）：
 
-wget --no-check-certificate -O snell.sh https://raw.githubusercontent.com/liczha/Snell/main/AMD64/snell.sh
+wget --no-check-certificate -O snell.sh https://raw.githubusercontent.com/liczha/Snell/main/AMD/snell.sh
 chmod +x snell.sh
 ./snell.sh
 
@@ -47,7 +47,7 @@ vi /etc/snell/snell-server.conf #修改Snell配置文件
 
 卸载Snell服务命令：
 
-wget --no-check-certificate -O uninstall-snell.sh https://raw.githubusercontent.com/liczha/Snell/main/AMD64/uninstall-snell.sh
+wget --no-check-certificate -O uninstall-snell.sh https://raw.githubusercontent.com/liczha/Snell/main/AMD/uninstall-snell.sh
 chmod +x uninstall-snell.sh
 ./uninstall-snell.sh
 
