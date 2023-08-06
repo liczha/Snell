@@ -20,7 +20,7 @@ chmod +x snell.sh
 
 Debian & Ubuntu 用户依次执行命令（ARM）：
 
-wget --no-check-certificate -O snell.sh https://raw.githubusercontent.com/liczha/Snell/main/Arm/snell.sh
+wget --no-check-certificate -O snell.sh https://raw.githubusercontent.com/liczha/Snell/main/ARM/snell.sh
 chmod +x snell.sh
 ./snell.sh
 
