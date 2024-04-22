@@ -29,7 +29,7 @@ plain='\033[0m'
 [[ $EUID -ne 0 ]] && echo -e "${red}Error:${plain} This script must be run as root!" && exit 1
 
 cur_dir=$( pwd )
-software=(Shadowsocks-Python ShadowsocksR Shadowsocks-Go Shadowsocks-libev)
+software=(Shadowsocks-python3 ShadowsocksR Shadowsocks-Go Shadowsocks-libev)
 
 libsodium_file="libsodium-1.0.13"
 libsodium_url="https://github.com/jedisct1/libsodium/releases/download/1.0.13/libsodium-1.0.13.tar.gz"
@@ -37,12 +37,12 @@ libsodium_url="https://github.com/jedisct1/libsodium/releases/download/1.0.13/li
 mbedtls_file="mbedtls-2.5.1"
 mbedtls_url="http://dl.teddysun.com/files/mbedtls-2.5.1-gpl.tgz"
 
-shadowsocks_python_file="shadowsocks-master"
-shadowsocks_python_url="https://github.com/shadowsocks/shadowsocks/archive/master.zip"
-shadowsocks_python_init="/etc/init.d/shadowsocks-python"
-shadowsocks_python_config="/etc/shadowsocks-python/config.json"
-shadowsocks_python_centos="https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks"
-shadowsocks_python_debian="https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks-debian"
+shadowsocks_python3_file="shadowsocks-master"
+shadowsocks_python3_url="https://github.com/shadowsocks/shadowsocks/archive/master.zip"
+shadowsocks_python3_init="/etc/init.d/shadowsocks-python3"
+shadowsocks_python3_config="/etc/shadowsocks-python3/config.json"
+shadowsocks_python3_centos="https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks"
+shadowsocks_python3_debian="https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks-debian"
 
 shadowsocks_r_file="shadowsocksr-manyuser"
 shadowsocks_r_url="https://github.com/teddysun/shadowsocksr/archive/manyuser.zip"
@@ -279,11 +279,11 @@ download_files() {
     download "${libsodium_file}.tar.gz" "${libsodium_url}"
 
     if   [ "${selected}" == "1" ]; then
-        download "${shadowsocks_python_file}.zip" "${shadowsocks_python_url}"
+        download "${shadowsocks_python3_file}.zip" "${shadowsocks_python3_url}"
         if check_sys packageManager yum; then
-            download "${shadowsocks_python_init}" "${shadowsocks_python_centos}"
+            download "${shadowsocks_python3_init}" "${shadowsocks_python3_centos}"
         elif check_sys packageManager apt; then
-            download "${shadowsocks_python_init}" "${shadowsocks_python_debian}"
+            download "${shadowsocks_python3_init}" "${shadowsocks_python3_debian}"
         fi
     elif [ "${selected}" == "2" ]; then
         download "${shadowsocks_r_file}.zip" "${shadowsocks_r_url}"
@@ -370,10 +370,10 @@ config_firewall() {
 
 config_shadowsocks() {
 if   [ "${selected}" == "1" ]; then
-    if [ ! -d "$(dirname ${shadowsocks_python_config})" ]; then
-        mkdir -p $(dirname ${shadowsocks_python_config})
+    if [ ! -d "$(dirname ${shadowsocks_python3_config})" ]; then
+        mkdir -p $(dirname ${shadowsocks_python3_config})
     fi
-    cat > ${shadowsocks_python_config}<<-EOF
+    cat > ${shadowsocks_python3_config}<<-EOF
 {
     "server":"0.0.0.0",
     "server_port":${shadowsocksport},
@@ -452,7 +452,7 @@ install_dependencies() {
         [ ! -f /etc/yum.repos.d/epel.repo ] && echo -e "${red}Error:${plain} Install EPEL repo failed, please check it." && exit 1
         yum --enablerepo=epel -y install udns-devel
         yum_depends=(
-            unzip gzip openssl openssl-devel gcc python python-devel python-setuptools pcre pcre-devel libtool libevent xmlto
+            unzip gzip openssl openssl-devel gcc python3 python3-devel python3-setuptools pcre pcre-devel libtool libevent xmlto
             autoconf automake make curl curl-devel zlib-devel perl perl-devel cpio expat-devel gettext-devel asciidoc
             libev-devel
         )
@@ -461,7 +461,7 @@ install_dependencies() {
         done
     elif check_sys packageManager apt; then
         apt_depends=(
-            gettext build-essential unzip gzip python python-dev python-setuptools curl openssl libssl-dev
+            gettext build-essential unzip gzip python3 python3-dev python3-setuptools curl openssl libssl-dev
             autoconf automake libtool gcc make perl cpio libpcre3 libpcre3-dev zlib1g-dev
             libudns-dev libev-dev
         )
@@ -520,7 +520,7 @@ install_select() {
     esac
     done
 
-    if [ -f ${shadowsocks_python_init} ] && [ "${selected}" == "2" ]; then
+    if [ -f ${shadowsocks_python3_init} ] && [ "${selected}" == "2" ]; then
         echo -e "${yellow}Warning:${plain} ${red}${software[0]}${plain} has already be installed."
         printf "Are you sure continue install ${red}${software[1]}${plain}? [y/n]\n"
         read -p "(default: n):" yes_no
@@ -732,28 +732,28 @@ install_mbedtls() {
     fi
 }
 
-install_shadowsocks_python() {
+install_shadowsocks_python3() {
     cd ${cur_dir}
-    unzip -q ${shadowsocks_python_file}.zip
+    unzip -q ${shadowsocks_python3_file}.zip
     if [ $? -ne 0 ];then
-        echo -e "${red}Error:${plain} unzip ${shadowsocks_python_file}.zip failed, please check unzip command."
+        echo -e "${red}Error:${plain} unzip ${shadowsocks_python3_file}.zip failed, please check unzip command."
         install_cleanup
         exit 1
     fi
 
-    cd ${shadowsocks_python_file}
-    python setup.py install --record /usr/local/shadowsocks_python.log
+    cd ${shadowsocks_python3_file}
+    python3 setup.py install --record /usr/local/shadowsocks_python3.log
 
     if [ -f /usr/bin/ssserver ] || [ -f /usr/local/bin/ssserver ]; then
-        chmod +x ${shadowsocks_python_init}
-        local service_name=$(basename ${shadowsocks_python_init})
+        chmod +x ${shadowsocks_python3_init}
+        local service_name=$(basename ${shadowsocks_python3_init})
         if check_sys packageManager yum; then
             chkconfig --add ${service_name}
             chkconfig ${service_name} on
         elif check_sys packageManager apt; then
             update-rc.d -f ${service_name} defaults
         fi
-        ${shadowsocks_python_init} start
+        ${shadowsocks_python3_init} start
     else
         echo
         echo -e "${red}Error:${plain} ${software[0]} install failed."
@@ -857,7 +857,7 @@ install_shadowsocks_libev() {
     fi
 }
 
-install_completed_python() {
+install_completed_python3() {
     clear
     echo
     echo -e "Congratulations, ${green}${software[0]}${plain} server install completed!"
@@ -907,10 +907,10 @@ install_main(){
     ldconfig
 
     if   [ "${selected}" == "1" ]; then
-        install_shadowsocks_python
-        install_completed_python
+        install_shadowsocks_python3
+        install_completed_python3
     elif [ "${selected}" == "2" ]; then
-        if [ "${yes_no}" == "y" -o "${yes_no}" == "Y" ] || [ ! -f ${shadowsocks_python_init} ]; then
+        if [ "${yes_no}" == "y" -o "${yes_no}" == "Y" ] || [ ! -f ${shadowsocks_python3_init} ]; then
             install_shadowsocks_r
             install_completed_r
         fi
@@ -933,7 +933,7 @@ install_cleanup(){
     cd ${cur_dir}
     rm -rf ${libsodium_file} ${libsodium_file}.tar.gz
     rm -rf ${mbedtls_file} ${mbedtls_file}-gpl.tgz
-    rm -rf ${shadowsocks_python_file} ${shadowsocks_python_file}.zip
+    rm -rf ${shadowsocks_python3_file} ${shadowsocks_python3_file}.zip
     rm -rf ${shadowsocks_r_file} ${shadowsocks_r_file}.zip
     rm -rf ${shadowsocks_go_file_64}.gz ${shadowsocks_go_file_32}.gz
     rm -rf ${shadowsocks_libev_file} ${shadowsocks_libev_file}.tar.gz
@@ -953,28 +953,28 @@ install_shadowsocks(){
     install_cleanup
 }
 
-uninstall_shadowsocks_python() {
+uninstall_shadowsocks_python3() {
     printf "Are you sure uninstall ${red}${software[0]}${plain}? [y/n]\n"
     read -p "(default: n):" answer
     [ -z ${answer} ] && answer="n"
     if [ "${answer}" == "y" ] || [ "${answer}" == "Y" ]; then
-        ${shadowsocks_python_init} status > /dev/null 2>&1
+        ${shadowsocks_python3_init} status > /dev/null 2>&1
         if [ $? -eq 0 ]; then
-            ${shadowsocks_python_init} stop
+            ${shadowsocks_python3_init} stop
         fi
-        local service_name=$(basename ${shadowsocks_python_init})
+        local service_name=$(basename ${shadowsocks_python3_init})
         if check_sys packageManager yum; then
             chkconfig --del ${service_name}
         elif check_sys packageManager apt; then
             update-rc.d -f ${service_name} remove
         fi
 
-        rm -fr $(dirname ${shadowsocks_python_config})
-        rm -f ${shadowsocks_python_init}
+        rm -fr $(dirname ${shadowsocks_python3_config})
+        rm -f ${shadowsocks_python3_init}
         rm -f /var/log/shadowsocks.log
-        if [ -f /usr/local/shadowsocks_python.log ]; then
-            cat /usr/local/shadowsocks_python.log | xargs rm -rf
-            rm -f /usr/local/shadowsocks_python.log
+        if [ -f /usr/local/shadowsocks_python3.log ]; then
+            cat /usr/local/shadowsocks_python3.log | xargs rm -rf
+            rm -f /usr/local/shadowsocks_python3.log
         fi
         echo -e "${green}Info:${plain} ${software[0]} uninstall success"
     else
@@ -1103,8 +1103,8 @@ uninstall_shadowsocks() {
     done
 
     if   [ "${un_select}" == "1" ]; then
-        if [ -f ${shadowsocks_python_init} ]; then
-            uninstall_shadowsocks_python
+        if [ -f ${shadowsocks_python3_init} ]; then
+            uninstall_shadowsocks_python3
         else
             echo -e "${red}Error:${plain} ${software[${un_select}-1]} not installed, please check it and try again."
             echo
